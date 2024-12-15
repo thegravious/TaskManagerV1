@@ -1,15 +1,16 @@
 "use client";
-import React from "react";
-import Button from "../Button/Button";
-import Inputfeild from "../InputField/InputField";
+import React , {useState} from "react";
+import Button from "../Button";
+import Inputfeild from "../InputField";
 import { ToastContainer , toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import TaskContext from "@/app/context/TaskContex";
+import useTaskContext from "@/app/context/useTaskContext";
 
-const AddTask = () => {
-  const { AddTask } = React.useContext(TaskContext);
 
-  const [userTask, setUserTask] = React.useState({
+const CreateTask = () => {
+  const { addTask } = useTaskContext();
+
+  const [userTask, setUserTask] = useState({
     taskTitle: "",
     taskDescription: "",
   });
@@ -18,9 +19,9 @@ const AddTask = () => {
     e.preventDefault();
 
     try {
-      const resp = await AddTask({
+      const resp = await addTask({
         title: userTask.taskTitle,
-        desciption: userTask.taskDescription,
+        description: userTask.taskDescription,
       });
 
 
@@ -99,4 +100,4 @@ const AddTask = () => {
   );
 };
 
-export default AddTask;
+export default CreateTask;

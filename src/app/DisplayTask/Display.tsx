@@ -1,21 +1,22 @@
 "use client";
 
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import TaskContext from "@/app/context/TaskContex";
-import DisplayCard from "../components/DisplayCard/DisplayCard";
-import Button from "../components/Button/Button";
+import DisplayCard from "../components/DisplayCard";
+import Button from "../components/Button";
+import useTaskContext from "../context/useTaskContext";
+import { UserType } from "../context";
 
 const DisplayAllTask = () => {
-  const [LoadMore , setLoadMore] = React.useState(6)
-  const { GetTask } = useContext(TaskContext);
+  const [loadMore , setLoadMore] = useState(6)
+  const { getTask } = useTaskContext();
 
-  const [task, setTask] = useState([]);
+  const [task, setTask] = useState<UserType[]>([]);
 
   const fetchTasks = async () => {
     try {
-      const resp = await GetTask();
+      const resp = await getTask();
       if (resp?.status === true) {
         setTask(resp.data);
       } else {
@@ -26,9 +27,11 @@ const DisplayAllTask = () => {
       console.error(error);
     }
   };
+  
   useEffect(() => {
     fetchTasks();
   }, []);
+
   return (
     <>
       <ToastContainer
@@ -45,7 +48,7 @@ const DisplayAllTask = () => {
       />
 
       <div className="flex flex-wrap items-center justify-center gap-4">
-        {task.slice(0,LoadMore).map((data, index) => (
+        {task.slice(0,loadMore).map((data, index) => (
           <DisplayCard key={index} task={data} />
         ))}
       </div>
@@ -54,7 +57,9 @@ const DisplayAllTask = () => {
         buttonColor="primary"
         buttonType="button"
         buttonText="Load More"
-        operation={() => setLoadMore(LoadMore + 6)}
+        operation={() => setLoadMore(prev =>{
+          return prev + 6
+        })}
         />
       </div>
     </>

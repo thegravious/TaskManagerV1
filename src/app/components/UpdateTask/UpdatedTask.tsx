@@ -1,17 +1,17 @@
 "use client";
 
-import React, { useEffect, useContext, useState } from "react";
-import Button from "../Button/Button";
-import InputField from "../InputField/InputField";
+import React, { useEffect, useState } from "react";
+import Button from "../Button";
+import InputField from "../InputField";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import TaskContext from "@/app/context/TaskContex";
 import { useParams } from "next/navigation";
+import useTaskContext from "@/app/context/useTaskContext";
 
 const UpdateTask = () => {
   const params = useParams();
-  const userTaskId = params.UpdateTaskID;
-  const { GetSingleTask, UpdateTask } = useContext(TaskContext);
+  const userTaskId = params.UpdateTaskID as string;
+  const { getSingleTask, updateTask } = useTaskContext();
 
   const [userTask, setUserTask] = useState({
     taskTitle: "",
@@ -21,8 +21,8 @@ const UpdateTask = () => {
   // Fetch single task details
   const fetchTaskDetails = async () => {
     try {
-      const resp = await GetSingleTask({ userTaskId });
-      if (resp?.status === true) {
+      const resp = await getSingleTask({ userTaskId });
+      if (resp?.status && resp?.data) {
         const { title, completed } = resp.data;
         setUserTask({
           taskTitle: title || "",
@@ -46,7 +46,7 @@ const UpdateTask = () => {
     e.preventDefault();
 
     try {
-      const resp = await UpdateTask({
+      const resp = await updateTask({
         taskId: userTaskId,
         title: userTask.taskTitle,
         completed: userTask.completed,
@@ -102,9 +102,13 @@ const UpdateTask = () => {
                 <select
                   value={userTask.completed ? 1 : 0}
                   onChange={(e) => {
-                    setUserTask({...userTask,completed: e.target.value === "1",});}
-                  }
-                  className="bg-gray-50 border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    setUserTask({
+                      ...userTask,
+                      completed: e.target.value === "1",
+                    });
+                  }}
+                  className="bg-gray-50 border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                >
                   <option value={0}>Pending</option>
                   <option value={1}>Completed</option>
                 </select>

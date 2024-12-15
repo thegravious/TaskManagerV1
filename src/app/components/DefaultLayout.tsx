@@ -2,7 +2,7 @@
 import React from "react";
 import Header from "./Header";
 import Footer from "./Footer";
-import TaskProvider from "../context/TaskProvider";
+import TaskProvider from "../context/provider";
 
 interface LayoutTypes {
   children: React.ReactNode;

@@ -1,11 +1,11 @@
 import React from 'react'
 import Layout from '../components/DefaultLayout'
-import AddTask from '../components/task/AddTask'
+import CreateTask from '../components/CreateTask'
 
 const page = () => {
   return (
     <Layout>
-      <AddTask/>
+      <CreateTask/>
     </Layout>
   )
 }
